@@ -576,4 +576,4 @@ export default function PolyStudioGroovebox() {
     </div>
   );
 }
-<ctrl46>}],id:<ctrl46>44f67ce9-8a0c-41cd-af77-c986ddf330aa<ctrl46>,name:<ctrl46>PolyStudio Stable v3.4.5<ctrl46>,type:<ctrl46>frontend_component<ctrl46>,version:1,version_id:<ctrl46>9055e888-0699-4d6d-965a-0d92257be763<ctrl46>
+<ctrl46>}],id:<ctrl46>79251e6a-79a5-4806-bac4-25db1a359dcf<ctrl46>,name:<ctrl46>PolyStudio Groovebox V3.3.0 Keyboard MIDI<ctrl46>,type:<ctrl46>frontend_component<ctrl46>,version:9,version_id:<ctrl46>7be4a3f4-d50d-45f8-b39b-e85df649f7d2<ctrl46>}}
