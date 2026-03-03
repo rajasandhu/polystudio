@@ -159,18 +159,8 @@ function SynthEngineUI({ activeTrack, tracks, updateParam, setTracks }: any) {
           </div>
           <div className="flex-1 flex gap-3 items-center">
              <div className="flex-1 h-16 border border-black/60 bg-black/40 rounded relative overflow-hidden">
-                <svg className="w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="env-grad-violet" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#a855f7" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M 0 40 L 15 5 L 45 15 L 75 15 L 100 40" stroke="#a855f7" fill="url(#env-grad-violet)" strokeWidth="1.5" ></p>
-                  <circle cx="15" cy="5" r="2.5" fill="#a855f7" />
-                  <circle cx="45" cy="15" r="2.5" fill="#a855f7" />
-                  <circle cx="75" cy="15" r="2.5" fill="#a855f7" />
-                </svg>
+                <div className="absolute inset-0 bg-purple-500/10" />
+                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-purple-500/20" />
              </div>
              <div className="flex gap-1.5">
                <Knob label="A" value={(p.attack || 0.01)*100} onChange={(v) => updateParam(activeTrack, 'attack', v/100)} min={0.1} max={100} size="mini" color="purple" />
@@ -423,8 +413,8 @@ export default function PolyStudioGroovebox() {
   const updateNumSteps = (nV: number) => { if (nV > numSteps) { const r = nV / numSteps; setTracks(tracks.map(tr => { const oS = tr.steps.slice(0, numSteps); const nTr = [...tr.steps]; for (let i = 1; i < r; i++) { for (let j = 0; j < numSteps; j++) nTr[i * numSteps + j] = { ...oS[j], locked: false }; } return { ...tr, steps: nTr }; })); } setNumSteps(nV); };
   const updateParam = (tId: string, p: keyof TrackParams, v: any) => setTracks(tracks.map(t => t.id === tId ? { ...t, params: { ...t.params, [p]: v } } : t));
   const toggleStep = (tId: string, sI: number) => { setActiveTrack(tId); setTracks(tracks.map(t => { if (t.id === tId) { const ns = [...t.steps]; ns[sI].active = !ns[sI].active; if (ns[sI].active) setEditingStep({ trackId: tId, index: sI }); else if (editingStep?.index === sI && editingStep?.trackId === tId) setEditingStep(null); return { ...t, steps: ns }; } return t; })); };
-  const nudgeTrack = (tI: string, d: number) => { pushH(tracks); setTracks(prev => prev.map(t => { if (t.id === tI) { const ns = [...t.steps]; const sl = ns.slice(0, numSteps); if (d > 0) { const l = sl.pop()!; sl.unshift(l); } else { const f = sl.shift()!; sl.push(f); } for (let i = 0; i < numSteps; i++) ns[i] = sl[i]; return { ...t, steps: ns }; } return t; })); };
-  const shiftTrackOctave = (tI: string, delta: number) => { pushH(tracks); setTracks(prev => prev.map(t => { if (t.id === tI) { return { ...t, steps: t.steps.map(s => ({ ...s, notes: s.notes.map(n => { const m = n.match(/([A-G]#?)(\d)/); if (m) return `${m[1]}${Math.max(0, Math.min(8, parseInt(m[2]) + delta))}`; return n; }) })) }; } return t; })); };
+  const nudgeTrack = (tI: string, d: number) => { pushH(tracks); setTracks(prev => prev.map(t => { if (tI === t.id) { const ns = [...t.steps]; const sl = ns.slice(0, numSteps); if (d > 0) { const l = sl.pop()!; sl.unshift(l); } else { const f = sl.shift()!; sl.push(f); } for (let i = 0; i < numSteps; i++) ns[i] = sl[i]; return { ...t, steps: ns }; } return t; })); };
+  const shiftTrackOctave = (tI: string, delta: number) => { pushH(tracks); setTracks(prev => prev.map(t => { if (tI === t.id) { return { ...t, steps: t.steps.map(s => ({ ...s, notes: s.notes.map(n => { const m = n.match(/([A-G]#?)(\d)/); if (m) return `${m[1]}${Math.max(0, Math.min(8, parseInt(m[2]) + delta))}`; return n; }) })) }; } return t; })); };
   const applyPreset = (tId: string, pN: string) => { const p = PRESETS[tId]?.[pN]; if (p) setTracks(tracks.map(t => t.id === tId ? { ...t, activePreset: pN, params: { ...t.params, ...p } } : t)); };
 
   const randomizeAll = () => { pushH(tracks); const sN = getScaleNotes(rootNote, scaleType); setTracks(prev => prev.map(tr => { const isKick = tr.id === 'drum-1'; const isSnare = tr.id === 'drum-2'; const isHats = tr.id === 'drum-3'; const isMelodic = tr.type === 'synth'; return { ...tr, stepSpeed: 1, steps: tr.steps.map((s, i) => { let active = false; let notes = tr.type === 'drum' ? (isKick ? ['C1'] : ['C3']) : [`${sN[0]}2`]; if (isKick) active = i % 4 === 0; else if (isSnare) active = i % 8 === 4; else if (isHats) active = Math.random() < 0.6; else if (isMelodic) { active = Math.random() < 0.2; notes = [`${sN[Math.floor(Math.random() * sN.length)]}${tr.id === 'synth-1' ? '1' : '3'}`]; } else active = Math.random() < 0.15; return { ...s, active, notes }; }) }; })); };
