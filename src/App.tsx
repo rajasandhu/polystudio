@@ -166,7 +166,7 @@ function SynthEngineUI({ activeTrack, tracks, updateParam, setTracks }: any) {
                       <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
                     </linearGradient>
                   </defs>
-                  <path d={`M 0 40 L 15 5 L 45 15 L 75 15 L 100 40`} stroke="#a855f7" fill="url(#env-grad-violet)" strokeWidth="1.5" ></p>
+                  <path d="M 0 40 L 15 5 L 45 15 L 75 15 L 100 40" stroke="#a855f7" fill="url(#env-grad-violet)" strokeWidth="1.5" ></p>
                   <circle cx="15" cy="5" r="2.5" fill="#a855f7" />
                   <circle cx="45" cy="15" r="2.5" fill="#a855f7" />
                   <circle cx="75" cy="15" r="2.5" fill="#a855f7" />
