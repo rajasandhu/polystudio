@@ -346,7 +346,6 @@ export default function PolyStudioGroovebox() {
     const bC = p.cutoff || 2000; 
     const eA = p.filterEnvAmount || 0; 
     filter.frequency.setValueAtTime(bC, t);
-    // Fixed: Only ramp to peak frequency quickly if there's an actual envelope amount
     if (eA !== 0) {
       filter.frequency.exponentialRampToValueAtTime(Math.min(20000, Math.max(20, bC + eA)), t + 0.04);
       filter.frequency.exponentialRampToValueAtTime(bC, t + a + d);
